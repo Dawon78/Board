@@ -1,6 +1,8 @@
 package com.dawon.board.post.controller;
 
+import com.dawon.board.post.dto.LikeResponse;
 import com.dawon.board.post.dto.PostForm;
+import com.dawon.board.post.service.PostLikeService;
 import com.dawon.board.post.service.PostService;
 import com.dawon.board.security.LoginMember;
 import jakarta.validation.Valid;
@@ -9,12 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PostController {
 
     private final PostService postService;
+    private final PostLikeService postLikeService;
 
     @GetMapping
     public String list(@RequestParam(defaultValue = "1") int page, Model model) {
@@ -34,8 +32,11 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String detail(@PathVariable Long id, Model model) {
+    public String detail(@PathVariable Long id,
+                         @AuthenticationPrincipal LoginMember loginMember,
+                         Model model) {
         model.addAttribute("post", postService.findDetail(id));
+        model.addAttribute("liked", loginMember != null && postLikeService.isLiked(id, loginMember.getId()));
         return "post/detail";
     }
 
@@ -83,5 +84,12 @@ public class PostController {
                          @AuthenticationPrincipal LoginMember loginMember) {
         postService.delete(id, loginMember.getId());
         return "redirect:/posts";
+    }
+
+    @PostMapping("/{id}/like")
+    @ResponseBody
+    public LikeResponse like(@PathVariable Long id,
+                             @AuthenticationPrincipal LoginMember loginMember) {
+        return postLikeService.toggle(id, loginMember.getId());
     }
 }

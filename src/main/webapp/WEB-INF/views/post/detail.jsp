@@ -12,8 +12,16 @@
 <hr>
 <div class="mb-4" style="white-space: pre-wrap;"><c:out value="${post.content}"/></div>
 
-<div class="mb-4">
-    <span class="text-muted">좋아요 ${post.likeCount}</span>
+<div class="mb-4">git add .
+    <sec:authorize access="isAuthenticated()">
+        <button type="button" id="likeBtn" data-post-id="${post.id}"
+                class="btn ${liked ? 'btn-danger' : 'btn-outline-danger'}">
+            ♥ <span id="likeCount">${post.likeCount}</span>
+        </button>
+    </sec:authorize>
+    <sec:authorize access="isAnonymous()">
+        <a href="/login" class="btn btn-outline-danger">♥ ${post.likeCount}</a>
+    </sec:authorize>
 </div>
 
 <div class="d-flex gap-2">
@@ -30,5 +38,25 @@
         </c:if>
     </sec:authorize>
 </div>
+
+<script>
+    $(function () {
+        $("#likeBtn").on("click", function () {
+            const $btn = $(this);
+            $btn.prop("disabled", true);
+            $.post("/posts/" + $btn.data("postId") + "/like")
+                .done(function (res) {
+                    $btn.toggleClass("btn-danger", res.liked).toggleClass("btn-outline-danger", !res.liked);
+                    $("#likeCount").text(res.count);
+                })
+                .fail(function () {
+                    alert("좋아요 처리 중 오류가 발생했습니다.");
+                })
+                .always(function () {
+                    $btn.prop("disabled", false);
+                });
+        });
+    });
+</script>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
