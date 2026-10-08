@@ -12,7 +12,7 @@
 <hr>
 <div class="mb-4" style="white-space: pre-wrap;"><c:out value="${post.content}"/></div>
 
-<div class="mb-4">git add .
+<div class="mb-4">
     <sec:authorize access="isAuthenticated()">
         <button type="button" id="likeBtn" data-post-id="${post.id}"
                 class="btn ${liked ? 'btn-danger' : 'btn-outline-danger'}">
