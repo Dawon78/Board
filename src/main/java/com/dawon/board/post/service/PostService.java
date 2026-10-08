@@ -4,6 +4,7 @@ import com.dawon.board.common.NotFoundException;
 import com.dawon.board.post.domain.Post;
 import com.dawon.board.post.dto.PostForm;
 import com.dawon.board.post.dto.PostView;
+import com.dawon.board.post.mapper.PostLikeMapper;
 import com.dawon.board.post.mapper.PostMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -17,7 +18,7 @@ import java.util.List;
 public class PostService {
 
     private static final int PAGE_SIZE = 10;
-
+    private final PostLikeMapper postLikeMapper;
     private final PostMapper postMapper;
 
     @Transactional(readOnly = true)
@@ -71,6 +72,7 @@ public class PostService {
     @Transactional
     public void delete(Long postId, Long loginMemberId) {
         getOwnedPost(postId, loginMemberId);
+        postLikeMapper.deleteByPostId(postId);
         postMapper.delete(postId);
     }
 
