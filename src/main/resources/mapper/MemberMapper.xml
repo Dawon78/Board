@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dawon.board.member.mapper.MemberMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO member (username, password, nickname)
+        VALUES (#{username}, #{password}, #{nickname})
+    </insert>
+
+    <select id="findByUsername" resultType="com.dawon.board.member.domain.Member">
+        SELECT id, username, password, nickname, created_at
+        FROM member
+        WHERE username = #{username}
+    </select>
+
+    <select id="existsByUsername" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM member WHERE username = #{username}
+    </select>
+
+    <select id="existsByNickname" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM member WHERE nickname = #{nickname}
+    </select>
+</mapper>
