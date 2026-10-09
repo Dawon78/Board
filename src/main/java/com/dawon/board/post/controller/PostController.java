@@ -39,7 +39,7 @@ public class PostController {
                          Model model) {
         model.addAttribute("post", postService.findDetail(id));
         model.addAttribute("liked", loginMember != null && postLikeService.isLiked(id, loginMember.getId()));
-        model.addAttribute("comments", commentService.findByPostId(id));   // ← 여기에 추가
+        model.addAttribute("comments", commentService.findByPostId(id));
         return "post/detail";
     }
 
