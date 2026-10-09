@@ -1,5 +1,6 @@
 package com.dawon.board.post.service;
 
+import com.dawon.board.comment.mapper.CommentMapper;
 import com.dawon.board.common.NotFoundException;
 import com.dawon.board.post.domain.Post;
 import com.dawon.board.post.dto.PostForm;
@@ -20,6 +21,7 @@ public class PostService {
     private static final int PAGE_SIZE = 10;
     private final PostLikeMapper postLikeMapper;
     private final PostMapper postMapper;
+    private final CommentMapper commentMapper;
 
     @Transactional(readOnly = true)
     public List<PostView> findPage(int page) {
@@ -72,6 +74,8 @@ public class PostService {
     @Transactional
     public void delete(Long postId, Long loginMemberId) {
         getOwnedPost(postId, loginMemberId);
+        commentMapper.deleteRepliesByPostId(postId);
+        commentMapper.deleteByPostId(postId);
         postLikeMapper.deleteByPostId(postId);
         postMapper.delete(postId);
     }

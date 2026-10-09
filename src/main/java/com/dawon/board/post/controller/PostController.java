@@ -1,5 +1,6 @@
 package com.dawon.board.post.controller;
 
+import com.dawon.board.comment.service.CommentService;
 import com.dawon.board.post.dto.LikeResponse;
 import com.dawon.board.post.dto.PostForm;
 import com.dawon.board.post.service.PostLikeService;
@@ -20,6 +21,7 @@ public class PostController {
 
     private final PostService postService;
     private final PostLikeService postLikeService;
+    private final CommentService commentService;
 
     @GetMapping
     public String list(@RequestParam(defaultValue = "1") int page, Model model) {
@@ -37,6 +39,7 @@ public class PostController {
                          Model model) {
         model.addAttribute("post", postService.findDetail(id));
         model.addAttribute("liked", loginMember != null && postLikeService.isLiked(id, loginMember.getId()));
+        model.addAttribute("comments", commentService.findByPostId(id));   // ← 여기에 추가
         return "post/detail";
     }
 
