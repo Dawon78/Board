@@ -34,8 +34,15 @@
     <c:forEach var="post" items="${posts}">
         <tr>
             <td>${post.id}</td>
-            <td>
-                <a href="/posts/${post.id}" class="text-decoration-none"><c:out value="${post.title}"/></a>
+            <td class="text-break">
+                <c:url var="detailUrl" value="/posts/${post.id}">
+                    <c:param name="page" value="${currentPage}"/>
+                    <c:if test="${not empty keyword}">
+                        <c:param name="type" value="${type}"/>
+                        <c:param name="keyword" value="${keyword}"/>
+                    </c:if>
+                </c:url>
+                <a href="${detailUrl}" class="text-decoration-none"><c:out value="${post.title}"/></a>
                 <c:if test="${post.edited}"><span class="text-muted small">(수정됨)</span></c:if>
             </td>
             <td><c:out value="${post.nickname}"/></td>

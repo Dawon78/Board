@@ -2,8 +2,10 @@ package com.dawon.board.member.controller;
 
 import com.dawon.board.member.dto.SignupForm;
 import com.dawon.board.member.service.MemberService;
+import com.dawon.board.security.LoginMember;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,9 +20,14 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/signup")
-    public String signupForm(@ModelAttribute SignupForm signupForm) {
+    public String signupForm(@ModelAttribute SignupForm signupForm,
+                             @AuthenticationPrincipal LoginMember loginMember) {
+        if (loginMember != null) {
+            return "redirect:/posts";
+        }
         return "member/signup";
     }
+
 
     @PostMapping("/signup")
     public String signup(@Valid @ModelAttribute SignupForm signupForm,
@@ -39,7 +46,10 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(@AuthenticationPrincipal LoginMember loginMember) {
+        if (loginMember != null) {
+            return "redirect:/posts";
+        }
         return "member/login";
     }
 }
