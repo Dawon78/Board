@@ -14,6 +14,7 @@
             <div class="mb-3">
                 <label class="form-label" for="username">아이디</label>
                 <form:input path="username" cssClass="form-control"/>
+                <div class="form-text">영문 소문자, 숫자 4~20자</div>
                 <form:errors path="username" cssClass="text-danger small"/>
             </div>
             <div class="mb-3">
@@ -30,6 +31,7 @@
             <div class="mb-3">
                 <label class="form-label" for="nickname">닉네임</label>
                 <form:input path="nickname" cssClass="form-control"/>
+                <div class="form-text">한글, 영문, 숫자 2~20자</div>
                 <form:errors path="nickname" cssClass="text-danger small"/>
             </div>
             <button type="submit" class="btn btn-primary w-100">가입하기</button>
