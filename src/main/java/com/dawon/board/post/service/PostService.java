@@ -26,12 +26,12 @@ public class PostService {
     @Transactional(readOnly = true)
     public List<PostView> findPage(int page, String type, String keyword) {
         int offset = (page - 1) * PAGE_SIZE;
-        return postMapper.findPage(offset, PAGE_SIZE, type, keyword);
+        return postMapper.findPage(offset, PAGE_SIZE, type, escapeLike(keyword));
     }
 
     @Transactional(readOnly = true)
     public int totalPages(String type, String keyword) {
-        int total = postMapper.count(type, keyword);
+        int total = postMapper.count(type, escapeLike(keyword));
         return Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
     }
 
@@ -89,5 +89,12 @@ public class PostService {
             throw new AccessDeniedException("작성자만 수정·삭제할 수 있습니다.");
         }
         return post;
+    }
+
+    private String escapeLike(String keyword) {
+        if (keyword == null) {
+            return null;
+        }
+        return keyword.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
     }
 }

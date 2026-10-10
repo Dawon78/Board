@@ -6,7 +6,14 @@
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
         $(document).ajaxSend(function (e, xhr) {
-            xhr.setRequestHeader(header, token);  
+            xhr.setRequestHeader(header, token);
+        });
+
+        $("form").on("submit", function (e) {
+            if (e.isDefaultPrevented()) {
+                return;
+            }
+            $(this).find("[type=submit]").prop("disabled", true);
         });
     });
 </script>

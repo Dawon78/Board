@@ -26,13 +26,13 @@
             <if test="keyword != null and keyword != ''">
                 <choose>
                     <when test="type == 'content'">
-                        LOWER(p.content) LIKE '%' || LOWER(#{keyword}) || '%'
+                        LOWER(p.content) LIKE '%' || LOWER(#{keyword}) || '%' ESCAPE '\'
                     </when>
                     <when test="type == 'writer'">
-                        LOWER(m.nickname) LIKE '%' || LOWER(#{keyword}) || '%'
+                        LOWER(m.nickname) LIKE '%' || LOWER(#{keyword}) || '%' ESCAPE '\'
                     </when>
                     <otherwise>
-                        LOWER(p.title) LIKE '%' || LOWER(#{keyword}) || '%'
+                        LOWER(p.title) LIKE '%' || LOWER(#{keyword}) || '%' ESCAPE '\'
                     </otherwise>
                 </choose>
             </if>
