@@ -3,6 +3,7 @@ package com.dawon.board.comment.service;
 import com.dawon.board.comment.domain.Comment;
 import com.dawon.board.comment.dto.CommentForm;
 import com.dawon.board.comment.dto.CommentView;
+import com.dawon.board.comment.mapper.CommentLikeMapper;
 import com.dawon.board.comment.mapper.CommentMapper;
 import com.dawon.board.common.NotFoundException;
 import com.dawon.board.post.mapper.PostMapper;
@@ -19,11 +20,12 @@ public class CommentService {
 
     private final CommentMapper commentMapper;
     private final PostMapper postMapper;
+    private final CommentLikeMapper commentLikeMapper;
 
 
     @Transactional(readOnly = true)
-    public List<CommentView> findByPostId(Long postId) {
-        return commentMapper.findByPostId(postId);
+    public List<CommentView> findByPostId(Long postId, Long memberId) {
+        return commentMapper.findByPostId(postId, memberId);
     }
 
     @Transactional
@@ -78,12 +80,15 @@ public class CommentService {
             if (commentMapper.countReplies(comment.getId()) > 0) {
                 commentMapper.softDelete(comment.getId());
             } else {
+                commentLikeMapper.deleteByCommentId(comment.getId());
                 commentMapper.delete(comment.getId());
             }
         } else {
+            commentLikeMapper.deleteByCommentId(comment.getId());
             commentMapper.delete(comment.getId());
             Comment parent = commentMapper.findById(comment.getParentId());
             if (parent != null && parent.isDeleted() && commentMapper.countReplies(parent.getId()) == 0) {
+                commentLikeMapper.deleteByCommentId(parent.getId());
                 commentMapper.delete(parent.getId());
             }
         }

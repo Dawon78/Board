@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dawon.board.comment.mapper.CommentLikeMapper">
+
+    <select id="exists" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM comment_like WHERE comment_id = #{commentId} AND member_id = #{memberId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO comment_like (comment_id, member_id)
+        VALUES (#{commentId}, #{memberId})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM comment_like WHERE comment_id = #{commentId} AND member_id = #{memberId}
+    </delete>
+
+    <select id="countByCommentId" resultType="int">
+        SELECT COUNT(*) FROM comment_like WHERE comment_id = #{commentId}
+    </select>
+
+    <delete id="deleteByCommentId">
+        DELETE FROM comment_like WHERE comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteByPostId">
+        DELETE FROM comment_like
+        WHERE comment_id IN (SELECT id FROM comment WHERE post_id = #{postId})
+    </delete>
+</mapper>
