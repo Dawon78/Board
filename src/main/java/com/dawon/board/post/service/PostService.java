@@ -24,14 +24,14 @@ public class PostService {
     private final CommentMapper commentMapper;
 
     @Transactional(readOnly = true)
-    public List<PostView> findPage(int page) {
+    public List<PostView> findPage(int page, String type, String keyword) {
         int offset = (page - 1) * PAGE_SIZE;
-        return postMapper.findPage(offset, PAGE_SIZE);
+        return postMapper.findPage(offset, PAGE_SIZE, type, keyword);
     }
 
     @Transactional(readOnly = true)
-    public int totalPages() {
-        int total = postMapper.countAll();
+    public int totalPages(String type, String keyword) {
+        int total = postMapper.count(type, keyword);
         return Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
     }
 

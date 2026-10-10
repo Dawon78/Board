@@ -21,17 +21,39 @@
         WHERE p.id = #{id}
     </select>
 
+    <sql id="searchCondition">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="type == 'content'">
+                        LOWER(p.content) LIKE '%' || LOWER(#{keyword}) || '%'
+                    </when>
+                    <when test="type == 'writer'">
+                        LOWER(m.nickname) LIKE '%' || LOWER(#{keyword}) || '%'
+                    </when>
+                    <otherwise>
+                        LOWER(p.title) LIKE '%' || LOWER(#{keyword}) || '%'
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </sql>
+
     <select id="findPage" resultType="com.dawon.board.post.dto.PostView">
         SELECT p.id, p.member_id, m.nickname, p.title, p.created_at, p.updated_at,
         (SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.id) AS like_count
         FROM post p
         JOIN member m ON m.id = p.member_id
+        <include refid="searchCondition"/>
         ORDER BY p.id DESC
         LIMIT #{size} OFFSET #{offset}
     </select>
 
-    <select id="countAll" resultType="int">
-        SELECT COUNT(*) FROM post
+    <select id="count" resultType="int">
+        SELECT COUNT(*)
+        FROM post p
+        JOIN member m ON m.id = p.member_id
+        <include refid="searchCondition"/>
     </select>
 
     <update id="update">

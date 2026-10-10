@@ -14,7 +14,9 @@ public interface PostMapper {
     PostView findDetail(Long id);                             // 상세 화면용
     List<PostView> findPage(@Param("offset") int offset,
                             @Param("size") int size);         // 목록 화면용 (페이징)
-    int countAll();                                           // 전체 글 수 (페이지 수 계산용)
+    List<PostView> findPage(@Param("offset") int offset, @Param("size") int size,
+                            @Param("type") String type, @Param("keyword") String keyword);
+    int count(@Param("type") String type, @Param("keyword") String keyword);
     void update(Post post);
     void delete(Long id);
 }
