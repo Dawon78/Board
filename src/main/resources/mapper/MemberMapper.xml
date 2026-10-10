@@ -18,6 +18,6 @@
     </select>
 
     <select id="existsByNickname" resultType="boolean">
-        SELECT COUNT(*) > 0 FROM member WHERE nickname = #{nickname}
+        SELECT COUNT(*) > 0 FROM member WHERE LOWER(nickname) = LOWER(#{nickname})
     </select>
 </mapper>
