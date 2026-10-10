@@ -24,12 +24,18 @@ public class PostController {
     private final CommentService commentService;
 
     @GetMapping
-    public String list(@RequestParam(defaultValue = "1") int page, Model model) {
-        int totalPages = postService.totalPages();
+    public String list(@RequestParam(defaultValue = "1") int page,
+                       @RequestParam(required = false) String type,
+                       @RequestParam(required = false) String keyword,
+                       Model model) {
+        String trimmedKeyword = keyword == null ? null : keyword.trim();
+        int totalPages = postService.totalPages(type, trimmedKeyword);
         int currentPage = Math.min(Math.max(page, 1), totalPages);
-        model.addAttribute("posts", postService.findPage(currentPage));
+        model.addAttribute("posts", postService.findPage(currentPage, type, trimmedKeyword));
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("type", type);
+        model.addAttribute("keyword", trimmedKeyword);
         return "post/list";
     }
 
