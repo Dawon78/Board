@@ -73,8 +73,15 @@
                 </div>
                 <div class="text-break" style="white-space: pre-wrap;"><c:out value="${comment.content}"/></div>
 
+                <sec:authorize access="isAnonymous()">
+                    <div class="small text-muted mt-1">♥ ${comment.likeCount}</div>
+                </sec:authorize>
+
                 <sec:authorize access="isAuthenticated()">
                     <div class="mt-1 d-flex gap-2 small">
+                        <button type="button"
+                                class="btn btn-sm py-0 comment-like-btn ${comment.liked ? 'btn-danger' : 'btn-outline-danger'}"
+                                data-comment-id="${comment.id}">♥ <span class="comment-like-count">${comment.likeCount}</span></button>
                         <a href="#" class="reply-toggle" data-target="#reply-form-${comment.id}">답글</a>
                         <c:if test="${loginId == comment.memberId}">
                             <a href="#" class="edit-toggle" data-target="#edit-form-${comment.id}">수정</a>
@@ -140,13 +147,33 @@
                     $btn.prop("disabled", false);
                 });
         });
-    });
 
-    $(".reply-toggle, .edit-toggle").on("click", function (e) {
-        e.preventDefault();
-        $($(this).data("target")).toggleClass("d-none");
-    });
+        $(".comment-like-btn").on("click", function () {
+            const $btn = $(this);
+            $btn.prop("disabled", true);
+            $.post("/comments/" + $btn.data("commentId") + "/like")
+                .done(function (res) {
+                    $btn.toggleClass("btn-danger", res.liked).toggleClass("btn-outline-danger", !res.liked);
+                    $btn.find(".comment-like-count").text(res.count);
+                })
+                .fail(function (xhr) {
+                    if (xhr.status === 401 || xhr.status === 403) {
+                        alert("로그인이 필요합니다. 다시 로그인해 주세요.");
+                        location.href = "/login";
+                        return;
+                    }
+                    alert("좋아요 처리 중 오류가 발생했습니다.");
+                })
+                .always(function () {
+                    $btn.prop("disabled", false);
+                });
+        });
 
+        $(".reply-toggle, .edit-toggle").on("click", function (e) {
+            e.preventDefault();
+            $($(this).data("target")).toggleClass("d-none");
+        });
+    });
 </script>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

@@ -23,6 +23,8 @@ public class CommentView {
     private boolean deleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private int likeCount;
+    private boolean liked;
 
     public String getCreatedAtText() {
         return createdAt == null ? "" : createdAt.format(FORMAT);

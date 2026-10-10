@@ -1,7 +1,9 @@
 package com.dawon.board.comment.controller;
 
 import com.dawon.board.comment.dto.CommentForm;
+import com.dawon.board.comment.service.CommentLikeService;
 import com.dawon.board.comment.service.CommentService;
+import com.dawon.board.post.dto.LikeResponse;
 import com.dawon.board.security.LoginMember;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CommentController {
 
     private final CommentService commentService;
+    private final CommentLikeService commentLikeService;
 
     @PostMapping("/posts/{postId}/comments")
     public String create(@PathVariable Long postId,
@@ -54,5 +58,12 @@ public class CommentController {
                          @AuthenticationPrincipal LoginMember loginMember) {
         Long savedPostId = commentService.delete(id, loginMember.getId());
         return "redirect:/posts/" + savedPostId + "#comments";
+    }
+
+    @PostMapping("/comments/{id}/like")
+    @ResponseBody
+    public LikeResponse like(@PathVariable Long id,
+                             @AuthenticationPrincipal LoginMember loginMember) {
+        return commentLikeService.toggle(id, loginMember.getId());
     }
 }

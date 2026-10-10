@@ -45,7 +45,7 @@ public class PostController {
                          Model model) {
         model.addAttribute("post", postService.findDetail(id));
         model.addAttribute("liked", loginMember != null && postLikeService.isLiked(id, loginMember.getId()));
-        model.addAttribute("comments", commentService.findByPostId(id));
+        model.addAttribute("comments", commentService.findByPostId(id, loginMember == null ? null : loginMember.getId()));
         return "post/detail";
     }
 
