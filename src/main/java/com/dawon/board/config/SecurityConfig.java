@@ -5,10 +5,12 @@ import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.HeaderWriterFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -26,7 +28,16 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
-                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+                .headers(headers -> {
+                    headers.frameOptions(frame -> frame.sameOrigin());
+                    headers.addObjectPostProcessor(new ObjectPostProcessor<HeaderWriterFilter>() {
+                        @Override
+                        public <O extends HeaderWriterFilter> O postProcess(O filter) {
+                            filter.setShouldWriteHeadersEagerly(true);
+                            return filter;
+                        }
+                    });
+                })
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/")
