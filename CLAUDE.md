@@ -1,9 +1,8 @@
  Claude 작업 지침
 
  1. 프로젝트
-- 게시판 서비스 구현 과제 (요구사항: README.md)
+- 게시판 서비스 개인 프로젝트 (설명: README.md)
 - 스택: Spring Boot 4.1 / MyBatis / JSP + JSTL + jQuery / H2 / Spring Security
-- 마감: 2026-10-14 원본 저장소에 PR을 올려 제출한다.
 
  2. 역할 분담
 - 코드와 SQL은 내가 직접 작성한다.
@@ -22,5 +21,4 @@
 
  5. 금지
 - git 커밋과 푸시를 하지 않는다.
-- PR을 Merge하지 않는다.
 - API 키나 개인정보를 출력하지 않는다.
