@@ -1,7 +1,8 @@
 # 게시판 서비스
 
 회원가입·로그인, 게시글, 댓글·대댓글, 좋아요, 검색 기능을 갖춘 게시판입니다.
-Spring MVC + MyBatis + JSP 구조로, 화면은 서버에서 렌더링하고 좋아요만 jQuery Ajax로 처리합니다.
+JPA로 만든 영화 예매 프로젝트 [Cineo](https://github.com/Dawon78/Cineo)와 달리, MyBatis로 SQL을 직접 작성하며 Spring MVC + JSP 구조를 익히기 위해 만들었습니다.
+화면은 서버에서 렌더링하고 좋아요만 jQuery Ajax로 처리합니다.
 
 | 문서 | 내용 |
 |---|---|
