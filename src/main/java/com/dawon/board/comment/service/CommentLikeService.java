@@ -32,6 +32,7 @@ public class CommentLikeService {
             try {
                 commentLikeMapper.insert(commentId, memberId);
             } catch (DuplicateKeyException e) {
+                // 동시에 두 번 눌려 UNIQUE에 걸린 경우: 이미 좋아요가 저장된 상태라 성공으로 본다
             }
             liked = true;
         }
